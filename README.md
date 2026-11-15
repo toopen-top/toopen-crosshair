@@ -1,120 +1,143 @@
-# ToOpen Crosshair（GNOME 全屏准星）
+# ToOpen Crosshair
 
-屏幕上始终显示的准星，**在全屏游戏中也可见**，且不抢鼠标键盘输入。
+A GNOME Shell extension that draws a crosshair on the screen — always visible,
+even in fullscreen games — without stealing mouse or keyboard input.
 
-## 为什么不是纯 Python 窗口
+## Why not a plain Python window
 
-Wayland 下没有任何协议允许普通应用窗口覆盖在其他全屏窗口之上。
-本方案让 **GNOME Shell 自己绘制**准星（`Main.layoutManager.addChrome`），
-绘制发生在合成器的 UI 层：
+Wayland offers no protocol for a regular app window to stay above other
+fullscreen windows. This project makes **GNOME Shell itself** draw the
+crosshair (`Main.layoutManager.addChrome`), in the compositor's UI layer:
 
-- 全屏应用之上一定可见（Mutter 检测到覆盖层会主动关闭 direct scanout）
-- 不注入游戏进程、不 hook，输入区域完全不受影响
-- Python 负责安装与调参，真正的绘制由扩展完成
+- Always visible above fullscreen apps (Mutter disables direct scanout when an
+  overlay is present)
+- No injection, no hooks — input handling is completely unaffected
+- Python handles install & tuning; the extension does the actual drawing
 
-> 注意：`addChrome` 的 `trackFullscreen` 必须为 `false`。该参数含义是
-> 「全屏时隐藏」，设成 `true` 反而会在游戏里看不到准星。
+> Note: `addChrome`'s `trackFullscreen` must be `false`. That flag means
+> "hide when fullscreen", so setting it to `true` would hide the crosshair in
+> games.
 
-## 安装
+## Installation
 
 ```bash
 cd ~/Desktop/toopen-crosshair
 python3 toopen-crosshair.py --install
 ```
 
-然后 **注销并重新登录一次**（Wayland 无法热加载新扩展；只需一次）。
-重登后屏幕正中央出现绿色十字。
+Then **log out and back in once** (Wayland cannot hot-load a new extension;
+this is a one-time step). A green crosshair appears at the center of the
+screen.
 
-## 常用命令
+## Common commands
 
 ```bash
-python3 toopen-crosshair.py on | off | toggle     # 开关
-python3 toopen-crosshair.py --status              # 当前全部参数
-python3 toopen-crosshair.py --prefs               # 图形设置面板
-python3 toopen-crosshair.py --doctor              # 环境 / 安装 / 日志排错
+python3 toopen-crosshair.py on | off | toggle     # toggle
+python3 toopen-crosshair.py --status              # print current settings
+python3 toopen-crosshair.py --prefs               # open the graphical preferences
+python3 toopen-crosshair.py --doctor              # environment / install / log diagnostics
 
 python3 toopen-crosshair.py --size 30 --thickness 3 --color '#ff0000' --dot
 python3 toopen-crosshair.py --gap 6 --circle --circle-radius 20
 python3 toopen-crosshair.py --opacity 0.85 --no-outline
-python3 toopen-crosshair.py --monitor all         # all / primary / focused / 索引
-python3 toopen-crosshair.py --offset-x 0 --offset-y -3   # 位置校准
+python3 toopen-crosshair.py --monitor all         # all / primary / focused / index
+python3 toopen-crosshair.py --offset-x 0 --offset-y -3   # fine-tune position
 
-python3 toopen-crosshair.py --set size=34 gap=8    # 任意设置项
+python3 toopen-crosshair.py --set size=34 gap=8    # any setting
 ```
 
-全局快捷键 `Super+C` 可随时开关（设置面板里可改或清空）。
+The global shortcut `Super+C` toggles the crosshair (configurable or clearable
+in preferences).
 
-## 界面语言 / 汉化
+## Language
 
-设置面板用「英文 msgid + gettext」实现，**跟随系统语言**（`LC_MESSAGES`）：
+The preferences window uses English msgids + gettext, so it **follows the
+system language** (`LC_MESSAGES`):
 
-- 系统语言为中文 → 显示中文
-- 其他语言 → 回退英文
-- 翻译文件：`po/zh_CN.po`，编译产物：`ext/locale/zh_CN/LC_MESSAGES/toopen-crosshair.mo`
-- `--install` 会自动调用 `msgfmt` 编译（缺少时提示 `sudo pacman -S gettext`）
+- Chinese system → Chinese UI
+- Any other language → falls back to English
+- Translations: `po/zh_CN.po`; compiled:
+  `ext/locale/zh_CN/LC_MESSAGES/toopen-crosshair.mo`
+- `--install` runs `msgfmt` automatically (hint if missing:
+  `sudo pacman -S gettext`)
 
-改完 `.po` 后重新 `--install`，再重开设置面板即可看到新文案。
-扩展的 `metadata.json` 名称/描述由 GNOME 直接读取，**不支持翻译**（保持中文）。
+Edit the `.po`, re-run `--install`, reopen preferences to see the new strings.
+The `metadata.json` name/description is read directly by GNOME and **cannot be
+translated** (always English).
 
-## 改设置面板不用重登
+## Editing preferences without re-login
 
-`prefs.js` 是一个固定的薄壳，按文件的 mtime 以
-`import('prefs-ui.js?v=<mtime>')` 加载真正的界面；mtime 变化 → URL 变化 →
-GNOME Shell 进程内的 ESM 缓存自动失效。
+`prefs.js` is a stable thin shell that loads the real UI via
+`import('prefs-ui.js?v=<mtime>')`; an mtime change → URL change → the ESM cache
+inside the GNOME Shell process is invalidated automatically.
 
-- 修改 `prefs-ui.js` / `.po`：`--install` 后重开面板即可，**无需注销**
-- 修改 `prefs.js` 自身（薄壳）：仍需注销重登一次（Shell 只缓存这一个文件）
+- Change `prefs-ui.js` / `.po`: `--install` then reopen preferences —
+  **no re-login**
+- Change `prefs.js` itself (the thin shell): re-login once (Shell caches only
+  this one file)
 
-## 参数速查
+## Settings reference
 
-| 键 | 含义 | 默认 |
+| Key | Meaning | Default |
 |---|---|---|
-| `enabled` | 是否显示 | `true` |
-| `size` | 十字总长度（逻辑像素） | 22 |
-| `thickness` | 线宽 | 2 |
-| `gap` | 中心空隙 | 4 |
-| `color` / `opacity` | 颜色 / 不透明度 | `#00ff00` / 1.0 |
-| `outline` / `outline-color` | 深色描边（亮背景上仍清晰） | `true` / `#000000` |
-| `dot` / `dot-size` | 中心点 | `false` / 3 |
-| `circle` / `circle-radius` | 外圈 | `false` / 11 |
+| `enabled` | Show the crosshair | `true` |
+| `size` | Total crosshair length (logical px) | 22 |
+| `thickness` | Line width | 2 |
+| `gap` | Center gap | 4 |
+| `color` / `opacity` | Color / opacity | `#00ff00` / 1.0 |
+| `outline` / `outline-color` | Dark outline (readable on bright backgrounds) | `true` / `#000000` |
+| `dot` / `dot-size` | Center dot | `false` / 3 |
+| `circle` / `circle-radius` | Surrounding ring | `false` / 11 |
 | `monitor-mode` | `all` / `primary` / `focused` | `all` |
-| `monitor-index` | 强制单屏（`-1` 关闭） | `-1` |
-| `offset-x` / `offset-y` | 中心偏移校准 | 0 |
-| `toggle-keybinding` | 全局快捷键 | `['<Super>c']` |
+| `monitor-index` | Force a single monitor (`-1` = off) | `-1` |
+| `offset-x` / `offset-y` | Center offset calibration | 0 |
+| `toggle-keybinding` | Global shortcut | `['<Super>c']` |
 
-## 排错
+## Troubleshooting
 
 ```bash
 python3 toopen-crosshair.py --doctor
 ```
 
-- **重登后准星没出现**：`--status` 看 `已注册` 与 `状态`；应显示 `ENABLED`
-- **日志里有 JS 报错**：`journalctl -o cat /usr/bin/gnome-shell | grep -i crosshair`
-- **改了 extension.js 想立刻生效**：`python3 toopen-crosshair.py --reload`，不行就重登
-- **改了 prefs-ui.js / 翻译**：`--install` 后关掉重开设置面板即可，无需重登
-- **设置面板文案仍是英文**：`--doctor` 看 `已编译翻译` 与 `当前语言`；确认系统语言是 `zh_CN.UTF-8`
-- **准星位置不居中**：`--offset-x/--offset-y` 微调
-- **想彻底移除**：`python3 toopen-crosshair.py --uninstall` 后重登
+- **No crosshair after re-login**: run `--status`, check registration & state;
+  should read `ENABLED`
+- **JS errors in the log**:
+  `journalctl -o cat /usr/bin/gnome-shell | grep -i crosshair`
+- **Changed extension.js, want it live**:
+  `python3 toopen-crosshair.py --reload`, or re-login
+- **Changed prefs-ui.js / translations**: `--install` then close & reopen
+  preferences
+- **Preferences still English**: `--doctor` checks compiled translations &
+  current locale; ensure the system locale is `zh_CN.UTF-8`
+- **Crosshair not centered**: fine-tune with `--offset-x/--offset-y`
+- **Full removal**: `python3 toopen-crosshair.py --uninstall` then re-login
 
-## 已知边界
+## Known limitations
 
-- 用 `gamescope` 以独占 DRM 模式启动游戏时，GNOME Shell 的 UI 层被绕过，准星不可见
-- 竞技类联网游戏可能把屏幕上叠加准星视为违规，风险自负
-- 完全多显示器/分数缩放已适配；若某屏幕仍偏移，用 offset 校准
+- Games launched under `gamescope` in exclusive DRM mode bypass the GNOME
+  Shell UI layer, so the crosshair is not visible
+- Competitive online games may treat on-screen crosshairs as cheating — use at
+  your own risk
+- Multi-monitor and fractional scaling are handled; if a screen is still
+  off-center, calibrate with the offsets
 
-## 目录
+## Layout
 
 ```
 toopen-crosshair/
-├── toopen-crosshair.py                     # 命令行入口
-├── po/zh_CN.po                      # 中文翻译（msgid 为英文）
-├── ext/                             # 扩展源码（--install 会拷到下面位置）
+├── toopen-crosshair.py               # CLI entry point
+├── po/zh_CN.po                       # Chinese translation (msgids in English)
+├── ext/                              # extension source (--install copies it below)
 │   ├── metadata.json
-│   ├── extension.js                 # 挂载 / 显示器 / 快捷键
-│   ├── painter.js                   # 纯 cairo 绘制逻辑（可单独测试）
-│   ├── prefs.js                     # 设置面板薄壳（按 mtime 热加载）
-│   ├── prefs-ui.js                  # 设置面板 UI（gettext 文案）
-│   ├── locale/zh_CN/LC_MESSAGES/toopen-crosshair.mo   # --install 编译生成
+│   ├── extension.js                  # mount / monitors / shortcut
+│   ├── painter.js                    # pure cairo drawing logic (unit-testable)
+│   ├── prefs.js                      # preferences thin shell (mtime hot-reload)
+│   ├── prefs-ui.js                   # preferences UI (gettext strings)
+│   ├── locale/zh_CN/LC_MESSAGES/toopen-crosshair.mo   # generated by --install
 │   └── schemas/…
-└── 安装位置: ~/.local/share/gnome-shell/extensions/toopen-crosshair@toopen.top/
+└── installed at: ~/.local/share/gnome-shell/extensions/toopen-crosshair@toopen.top/
 ```
+
+## License
+
+GPL-3.0-or-later. See [LICENSE](LICENSE).
