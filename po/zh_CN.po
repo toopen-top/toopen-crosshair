@@ -1,0 +1,177 @@
+# 准星浮层（Crosshair Overlay）简体中文翻译
+# 界面语言跟随系统语言（LC_MESSAGES）；修改后运行 python3 toopen-crosshair.py --install 重新编译。
+msgid ""
+msgstr ""
+"Project-Id-Version: toopen-crosshair 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-15 20:47+0800\n"
+"PO-Revision-Date: 2026-11-15 20:47+0800\n"
+"Last-Translator: Xavier\n"
+"Language-Team: Chinese (Simplified)\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: ext/prefs-ui.js:116
+msgid "General"
+msgstr "常规"
+
+#: ext/prefs-ui.js:117
+msgid ""
+"The crosshair is drawn by GNOME Shell itself, so it stays visible above "
+"fullscreen windows and never blocks mouse or keyboard input. Shortcut "
+"format: <Super>c, <Control><Alt>x — leave empty to disable."
+msgstr ""
+"准星由 GNOME Shell 直接绘制在界面最上层，因此全屏游戏中也始终可见，且不会拦截鼠标键盘输入。"
+"快捷键格式：<Super>c、<Control><Alt>x；留空表示不启用。"
+
+#: ext/prefs-ui.js:119
+msgid "Show crosshair"
+msgstr "显示准星"
+
+#: ext/prefs-ui.js:119
+msgid "Default shortcut: Super+C"
+msgstr "默认快捷键 Super+C"
+
+#: ext/prefs-ui.js:120
+msgid "Toggle shortcut"
+msgstr "开关快捷键"
+
+#: ext/prefs-ui.js:124
+msgid "Shape"
+msgstr "形状"
+
+#: ext/prefs-ui.js:125
+msgid "Length"
+msgstr "长度"
+
+#: ext/prefs-ui.js:125
+msgid "Total length of the crosshair, in pixels"
+msgstr "十字的总长度（像素）"
+
+#: ext/prefs-ui.js:126
+msgid "Thickness"
+msgstr "线宽"
+
+#: ext/prefs-ui.js:127
+msgid "Center gap"
+msgstr "中心空隙"
+
+#: ext/prefs-ui.js:127
+msgid "Empty space in the middle to keep the target visible"
+msgstr "中心留空，便于看清目标"
+
+#: ext/prefs-ui.js:128
+msgid "Center dot"
+msgstr "中心点"
+
+#: ext/prefs-ui.js:128
+msgid "Add a solid dot in the exact center"
+msgstr "在正中央补一个实心点"
+
+#: ext/prefs-ui.js:129
+msgid "Dot size"
+msgstr "中心点大小"
+
+#: ext/prefs-ui.js:130
+msgid "Ring"
+msgstr "外圈"
+
+#: ext/prefs-ui.js:130
+msgid "Draw a ring around the crosshair"
+msgstr "在准星外围画一个圆环"
+
+#: ext/prefs-ui.js:131
+msgid "Ring radius"
+msgstr "外圈半径"
+
+#: ext/prefs-ui.js:135
+msgid "Colors"
+msgstr "颜色"
+
+#: ext/prefs-ui.js:136
+msgid "Crosshair color"
+msgstr "准星颜色"
+
+#: ext/prefs-ui.js:137
+msgid "Dark outline"
+msgstr "深色描边"
+
+#: ext/prefs-ui.js:137
+msgid "Keeps the crosshair readable on bright backgrounds"
+msgstr "亮色背景上也能看清准星"
+
+#: ext/prefs-ui.js:138
+msgid "Outline color"
+msgstr "描边颜色"
+
+#: ext/prefs-ui.js:139
+msgid "Opacity"
+msgstr "不透明度"
+
+#: ext/prefs-ui.js:139
+msgid "1.0 is fully opaque"
+msgstr "1.0 为完全不透明"
+
+#: ext/prefs-ui.js:143
+msgid "Position"
+msgstr "位置"
+
+#: ext/prefs-ui.js:145
+msgid "Monitors"
+msgstr "显示器"
+
+#: ext/prefs-ui.js:147
+msgid "All monitors"
+msgstr "所有显示器"
+
+#: ext/prefs-ui.js:148
+msgid "Primary monitor"
+msgstr "主显示器"
+
+#: ext/prefs-ui.js:149
+msgid "Monitor with the active window"
+msgstr "活动窗口所在显示器"
+
+#: ext/prefs-ui.js:158
+msgid "Force monitor index"
+msgstr "强制指定显示器序号"
+
+#: ext/prefs-ui.js:159
+msgid ""
+"-1 uses the selection above; 0, 1, … shows the crosshair only on that monitor"
+msgstr "-1 表示使用上面的选择；0、1…… 表示只在这一块屏显示"
+
+#: ext/prefs-ui.js:160
+msgid "Horizontal offset"
+msgstr "水平偏移"
+
+#: ext/prefs-ui.js:161
+msgid "Fine-tune when the crosshair is not perfectly centered"
+msgstr "准星没有精确居中时用来微调"
+
+#: ext/prefs-ui.js:162
+msgid "Vertical offset"
+msgstr "垂直偏移"
+
+#: ext/prefs-ui.js:166
+msgid "About"
+msgstr "关于"
+
+#: ext/prefs-ui.js:168
+msgid "After changing the code"
+msgstr "修改代码后"
+
+#: ext/prefs-ui.js:169
+msgid "Run: python3 toopen-crosshair.py --install"
+msgstr "运行：python3 toopen-crosshair.py --install"
+
+#: ext/prefs-ui.js:172
+msgid "Command line"
+msgstr "命令行"
+
+#: ext/prefs-ui.js:173
+msgid "python3 toopen-crosshair.py --status / --size 30 / --dot / --monitor primary"
+msgstr "python3 toopen-crosshair.py --status / --size 30 / --dot / --monitor primary"

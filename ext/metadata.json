@@ -1,0 +1,9 @@
+{
+  "uuid": "toopen-crosshair@toopen.top",
+  "name": "ToOpen Crosshair",
+  "description": "Draws a configurable crosshair on top of every window, including fullscreen games. Rendered by GNOME Shell itself, so it never gets covered and never blocks input.",
+  "url": "https://github.com/toopen-top/toopen-crosshair",
+  "shell-version": ["45", "46", "47", "48", "49", "50", "51"],
+  "settings-schema": "org.gnome.shell.extensions.toopen-crosshair",
+  "gettext-domain": "toopen-crosshair"
+}

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <enum id="org.gnome.shell.extensions.toopen-crosshair.monitor-mode">
+    <value nick="all" value="0"/>
+    <value nick="primary" value="1"/>
+    <value nick="focused" value="2"/>
+  </enum>
+
+  <schema id="org.gnome.shell.extensions.toopen-crosshair" path="/org/gnome/shell/extensions/toopen-crosshair/">
+    <key name="enabled" type="b">
+      <default>true</default>
+      <summary>Show the crosshair</summary>
+    </key>
+
+    <key name="monitor-mode" enum="org.gnome.shell.extensions.toopen-crosshair.monitor-mode">
+      <default>'all'</default>
+      <summary>Which monitors get a crosshair</summary>
+    </key>
+
+    <key name="monitor-index" type="i">
+      <range min="-1" max="16"/>
+      <default>-1</default>
+      <summary>Force a single monitor index (-1 disables the override)</summary>
+    </key>
+
+    <key name="size" type="u">
+      <range min="2" max="400"/>
+      <default>22</default>
+      <summary>Total crosshair length in logical pixels</summary>
+    </key>
+
+    <key name="thickness" type="u">
+      <range min="1" max="24"/>
+      <default>2</default>
+      <summary>Line thickness in logical pixels</summary>
+    </key>
+
+    <key name="gap" type="u">
+      <range min="0" max="200"/>
+      <default>4</default>
+      <summary>Empty space between the center and the arms</summary>
+    </key>
+
+    <key name="color" type="s">
+      <default>'#00ff00'</default>
+      <summary>Crosshair color (#rrggbb)</summary>
+    </key>
+
+    <key name="opacity" type="d">
+      <range min="0.05" max="1.0"/>
+      <default>1.0</default>
+      <summary>Overall opacity</summary>
+    </key>
+
+    <key name="outline" type="b">
+      <default>true</default>
+      <summary>Draw a dark outline so the crosshair stays visible on bright backgrounds</summary>
+    </key>
+
+    <key name="outline-color" type="s">
+      <default>'#000000'</default>
+      <summary>Outline color (#rrggbb)</summary>
+    </key>
+
+    <key name="dot" type="b">
+      <default>false</default>
+      <summary>Draw a filled dot in the exact center</summary>
+    </key>
+
+    <key name="dot-size" type="u">
+      <range min="1" max="32"/>
+      <default>3</default>
+      <summary>Center dot diameter</summary>
+    </key>
+
+    <key name="circle" type="b">
+      <default>false</default>
+      <summary>Draw a circle around the crosshair</summary>
+    </key>
+
+    <key name="circle-radius" type="u">
+      <range min="1" max="300"/>
+      <default>11</default>
+      <summary>Circle radius</summary>
+    </key>
+
+    <key name="offset-x" type="i">
+      <range min="-4000" max="4000"/>
+      <default>0</default>
+      <summary>Horizontal offset from the monitor center</summary>
+    </key>
+
+    <key name="offset-y" type="i">
+      <range min="-4000" max="4000"/>
+      <default>0</default>
+      <summary>Vertical offset from the monitor center</summary>
+    </key>
+
+    <key name="toggle-keybinding" type="as">
+      <default>['&lt;Super&gt;c']</default>
+      <summary>Global shortcut that toggles the crosshair</summary>
+    </key>
+  </schema>
+</schemalist>
