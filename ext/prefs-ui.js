@@ -213,8 +213,41 @@ export function fillPreferencesWindow(prefs, window, _ = str => str) {
     // ── About ─────────────────────────────────────────────────────
     const about = new Adw.PreferencesGroup({
         title: _('About'),
-        description: esc(_('The crosshair is drawn by GNOME Shell directly on the topmost UI layer, so it stays visible above fullscreen games and never blocks mouse or keyboard input.')),
+        description: esc(_('Displays a customizable crosshair at the center of the screen to help with aiming in fullscreen games. It is drawn by GNOME Shell directly on the topmost UI layer, so it stays visible above fullscreen windows and never blocks mouse or keyboard input.')),
     });
+
+    const openUri = uri => {
+        const launcher = new Gtk.UriLauncher({uri});
+        launcher.launch(window, null, (src, result) => {
+            try {
+                src.launch_finish(result);
+            } catch (e) {
+                console.error(e.message);
+            }
+        });
+    };
+
+    about.add(new Adw.ActionRow({
+        title: _('Author'),
+        subtitle: esc('孤岛悬城'),
+    }));
+
+    const emailRow = new Adw.ActionRow({
+        title: _('Email'),
+        subtitle: esc('jixuancheng@qq.com'),
+        activatable: true,
+    });
+    emailRow.connect('activated', () => openUri('mailto:jixuancheng@qq.com'));
+    about.add(emailRow);
+
+    const sourceRow = new Adw.ActionRow({
+        title: _('Source code'),
+        subtitle: esc('https://github.com/toopen-top/toopen-crosshair'),
+        activatable: true,
+    });
+    sourceRow.connect('activated', () => openUri('https://github.com/toopen-top/toopen-crosshair'));
+    about.add(sourceRow);
+
     page.add(about);
 
     window.add(page);

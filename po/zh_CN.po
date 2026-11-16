@@ -161,7 +161,22 @@ msgstr "关于"
 
 #: ext/prefs-ui.js:166
 msgid ""
-"The crosshair is drawn by GNOME Shell directly on the topmost UI layer, so "
-"it stays visible above fullscreen games and never blocks mouse or keyboard "
-"input."
-msgstr "准星由 GNOME Shell 直接绘制在界面最上层，因此全屏游戏中也始终可见，且不会拦截鼠标键盘输入。"
+"Displays a customizable crosshair at the center of the screen to help with "
+"aiming in fullscreen games. It is drawn by GNOME Shell directly on the "
+"topmost UI layer, so it stays visible above fullscreen windows and never "
+"blocks mouse or keyboard input."
+msgstr ""
+"在屏幕中央显示一个可自定义的准星，方便在全屏游戏中瞄准。准星由 GNOME Shell 直接"
+"绘制在界面最上层，因此全屏游戏中也始终可见，且不会拦截鼠标键盘输入。"
+
+#: ext/prefs-ui.js:186
+msgid "Author"
+msgstr "作者"
+
+#: ext/prefs-ui.js:191
+msgid "Email"
+msgstr "邮箱"
+
+#: ext/prefs-ui.js:198
+msgid "Source code"
+msgstr "项目地址"
