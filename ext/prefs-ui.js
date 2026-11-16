@@ -90,16 +90,67 @@ function addColor(group, settings, key, title, subtitle) {
     return row;
 }
 
-// Adw.EntryRow 没有 subtitle 属性（不同于 ActionRow / SwitchRow / SpinRow），
-// 所以格式说明放在分组描述里。
-function addEntry(group, settings, key, title) {
-    // 快捷键在 GSettings 里是字符串数组，只取/存第一个元素。
-    const row = new Adw.EntryRow({title});
-    row.text = settings.get_strv(key)[0] ?? '';
-    row.connect('changed', () => {
-        const text = row.text.trim();
-        settings.set_strv(key, text ? [text] : []);
+// 快捷键：用 Gtk.Entry + EventControllerKey 捕捉按键，自动生成
+// GNOME Shell 的 accelerator 字符串（如 <Super>c），用户无需手打格式。
+function addShortcut(group, settings, key, title, subtitle, placeholder) {
+    const row = new Adw.ActionRow({title, subtitle: esc(subtitle)});
+    const entry = new Gtk.Entry({
+        hexpand: true,
+        valign: Gtk.Align.CENTER,
+        placeholder_text: placeholder,
+        secondary_icon_name: 'edit-clear-symbolic',
+        secondary_icon_activatable: true,
     });
+
+    entry.text = settings.get_strv(key)[0] ?? '';
+
+    const controller = new Gtk.EventControllerKey();
+    entry.add_controller(controller);
+    controller.connect('key-pressed', (_ctrl, keyval, _keycode, state) => {
+        // 单独按修饰键时不处理，等待真正的按键组合
+        const modifierOnly = [
+            Gdk.KEY_Shift_L, Gdk.KEY_Shift_R,
+            Gdk.KEY_Control_L, Gdk.KEY_Control_R,
+            Gdk.KEY_Alt_L, Gdk.KEY_Alt_R,
+            Gdk.KEY_Super_L, Gdk.KEY_Super_R,
+            Gdk.KEY_Meta_L, Gdk.KEY_Meta_R,
+            Gdk.KEY_ISO_Level3_Shift,
+            Gdk.KEY_Caps_Lock, Gdk.KEY_Num_Lock,
+        ];
+        if (modifierOnly.includes(keyval))
+            return false;
+
+        // 退格键清空（= 禁用快捷键）
+        if (keyval === Gdk.KEY_BackSpace) {
+            settings.set_strv(key, []);
+            entry.text = '';
+            return true;
+        }
+
+        const mods = state & (Gdk.ModifierType.SHIFT_MASK |
+            Gdk.ModifierType.CONTROL_MASK |
+            Gdk.ModifierType.ALT_MASK |
+            Gdk.ModifierType.SUPER_MASK |
+            Gdk.ModifierType.META_MASK);
+
+        const accel = Gtk.accelerator_name(keyval, mods);
+        if (accel) {
+            settings.set_strv(key, [accel]);
+            entry.text = accel;
+            return true;
+        }
+        return false;
+    });
+
+    entry.connect('icon-release', (e, pos) => {
+        if (pos === Gtk.EntryIconPosition.SECONDARY) {
+            settings.set_strv(key, []);
+            entry.text = '';
+        }
+    });
+
+    row.add_suffix(entry);
+    row.activatable_widget = entry;
     group.add(row);
     return row;
 }
@@ -112,12 +163,9 @@ export function fillPreferencesWindow(prefs, window, _ = str => str) {
     const page = new Adw.PreferencesPage();
 
     // ── General ───────────────────────────────────────────────────
-    const general = new Adw.PreferencesGroup({
-        title: _('General'),
-        description: esc(_('The crosshair is drawn by GNOME Shell itself, so it stays visible above fullscreen windows and never blocks mouse or keyboard input. Shortcut format: <Super>c, <Control><Alt>x — leave empty to disable.')),
-    });
+    const general = new Adw.PreferencesGroup({title: _('General')});
     addSwitch(general, settings, 'enabled', _('Show crosshair'), _('Default shortcut: Super+C'));
-    addEntry(general, settings, 'toggle-keybinding', _('Toggle shortcut'));
+    addShortcut(general, settings, 'toggle-keybinding', _('Toggle shortcut'), _('Press keys to record, Backspace to clear'), _('Press a shortcut…'));
     page.add(general);
 
     // ── Shape ─────────────────────────────────────────────────────
@@ -163,15 +211,10 @@ export function fillPreferencesWindow(prefs, window, _ = str => str) {
     page.add(position);
 
     // ── About ─────────────────────────────────────────────────────
-    const about = new Adw.PreferencesGroup({title: _('About')});
-    about.add(new Adw.ActionRow({
-        title: _('After changing the code'),
-        subtitle: esc(_('Run: python3 toopen-crosshair.py --install')),
-    }));
-    about.add(new Adw.ActionRow({
-        title: _('Command line'),
-        subtitle: esc(_('python3 toopen-crosshair.py --status / --size 30 / --dot / --monitor primary')),
-    }));
+    const about = new Adw.PreferencesGroup({
+        title: _('About'),
+        description: esc(_('The crosshair is drawn by GNOME Shell directly on the topmost UI layer, so it stays visible above fullscreen games and never blocks mouse or keyboard input.')),
+    });
     page.add(about);
 
     window.add(page);

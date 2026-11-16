@@ -18,15 +18,6 @@ msgstr ""
 msgid "General"
 msgstr "常规"
 
-#: ext/prefs-ui.js:117
-msgid ""
-"The crosshair is drawn by GNOME Shell itself, so it stays visible above "
-"fullscreen windows and never blocks mouse or keyboard input. Shortcut "
-"format: <Super>c, <Control><Alt>x — leave empty to disable."
-msgstr ""
-"准星由 GNOME Shell 直接绘制在界面最上层，因此全屏游戏中也始终可见，且不会拦截鼠标键盘输入。"
-"快捷键格式：<Super>c、<Control><Alt>x；留空表示不启用。"
-
 #: ext/prefs-ui.js:119
 msgid "Show crosshair"
 msgstr "显示准星"
@@ -38,6 +29,14 @@ msgstr "默认快捷键 Super+C"
 #: ext/prefs-ui.js:120
 msgid "Toggle shortcut"
 msgstr "开关快捷键"
+
+#: ext/prefs-ui.js:120
+msgid "Press keys to record, Backspace to clear"
+msgstr "按下要设置的组合键，按退格键清空"
+
+#: ext/prefs-ui.js:104
+msgid "Press a shortcut…"
+msgstr "按下快捷键…"
 
 #: ext/prefs-ui.js:124
 msgid "Shape"
@@ -160,18 +159,9 @@ msgstr "垂直偏移"
 msgid "About"
 msgstr "关于"
 
-#: ext/prefs-ui.js:168
-msgid "After changing the code"
-msgstr "修改代码后"
-
-#: ext/prefs-ui.js:169
-msgid "Run: python3 toopen-crosshair.py --install"
-msgstr "运行：python3 toopen-crosshair.py --install"
-
-#: ext/prefs-ui.js:172
-msgid "Command line"
-msgstr "命令行"
-
-#: ext/prefs-ui.js:173
-msgid "python3 toopen-crosshair.py --status / --size 30 / --dot / --monitor primary"
-msgstr "python3 toopen-crosshair.py --status / --size 30 / --dot / --monitor primary"
+#: ext/prefs-ui.js:166
+msgid ""
+"The crosshair is drawn by GNOME Shell directly on the topmost UI layer, so "
+"it stays visible above fullscreen games and never blocks mouse or keyboard "
+"input."
+msgstr "准星由 GNOME Shell 直接绘制在界面最上层，因此全屏游戏中也始终可见，且不会拦截鼠标键盘输入。"
